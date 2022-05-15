@@ -16,7 +16,7 @@ SNS_TOPIC_ARN = os.environ.get('SNS_TOPIC_ARN')
 SNS_SUBJECT = os.environ.get('SNS_SUBJECT')
 
 app = Chalice(app_name='deepl-for-slack-lambda')
-sc = WebClient(SLACK_BOT_TOKEN)
+sc = WebClient(token=SLACK_BOT_TOKEN)
 sns_client = boto3.client('sns')
 lang = chalicelib.Lang()
 ch_filter = chalicelib.Filter()
@@ -192,10 +192,9 @@ def get_slack_message(channel, ts):
 
 def translate_by_deepl(msg, lang):
     url = "https://api.deepl.com/v2/translate"
-    headers = {"Accept": "application/json"}
     params = {"key": DEEPL_AUTH_KEY, "text": msg, "target_lang": lang}
 
-    response = requests.get(url, params=params, headers=headers)
+    response = requests.get(url, params=params)
 
     # debug
     app.log.debug('deepl response:{}'.format(response))
